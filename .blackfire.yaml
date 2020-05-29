@@ -1,0 +1,37 @@
+# This is a sample .blackfire.yaml file created by Blackfire.
+# You can read more about .blackfire.yaml here: https://blackfire.io/docs/cookbooks/tests
+tests:
+    "The homepage should be fast":
+        path: "/"
+        assertions:
+            - "main.wall_time < 120ms"
+
+    "Not too many SQL queries":
+        path: "/.*"
+        assertions:
+            - "metrics.sql.queries.count <= 10"
+
+    "Not too many Doctrine entities":
+        path: "/.*"
+        assertions:
+            - "metrics.doctrine.entities.created.count <= 50"
+
+    "Composer autoloader should be optimized":
+        path: "/.*"
+        assertions:
+            - "metrics.composer.autoload.find_file.count <= 2"
+
+# For writing scenarios, take a look at the documentation
+# https://blackfire.io/docs/cookbooks/scenarios
+scenarios: |
+    #!blackfire-player
+
+    scenario
+        name 'The homepage should answer with a 200 status code'
+
+        visit url('/')
+            expect status_code() == 200
+            set firstLink css('.js-sightings-list a').first().text()
+
+        click link(firstLink)
+            expect status_code() == 200
