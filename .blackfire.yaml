@@ -19,7 +19,7 @@ tests:
     "Composer autoloader should be optimized":
         path: "/.*"
         assertions:
-            - "metrics.composer.autoload.find_file.count <= 2"
+            - "metrics.composer.autoload.find_file.count == 0"
 
 # For writing scenarios, take a look at the documentation
 # https://blackfire.io/docs/cookbooks/scenarios
