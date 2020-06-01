@@ -1,5 +1,5 @@
 version: 2.1
-description: Blackfire SymfonyCasts
+description: Blackfire SymfonyCasts test
 
 orbs:
     symfony: lolautruche/symfony@0.1
