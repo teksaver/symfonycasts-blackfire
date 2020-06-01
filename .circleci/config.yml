@@ -64,7 +64,7 @@ jobs:
             - symfony/deploy:
                 project-id: a5i4gffd76b7w
 
-            - run: sleep 120
+            #- run: sleep 120
 
             - blackfire-agent/build-trigger:
                 endpoint: "https://cu3hjnbcqu-a5i4gffd76b7w.eu.s5y.io/"
