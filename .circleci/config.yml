@@ -1,6 +1,12 @@
 version: 2.1
 description: Blackfire SymfonyCasts
 
+orbs:
+    blackfire: blackfireio/php@1.1
+    blackfire-agent: blackfireio/agent@1.2
+    blackfire-player: blackfireio/player@1.0
+    symfony: lolautruche/symfony@0.1
+
 jobs:
     build:
         docker:
@@ -13,6 +19,7 @@ jobs:
 
             - run: sudo apt update
             - run: sudo docker-php-ext-install pdo_mysql
+            - blackfire/setup
 
             # Download and cache dependencies
             - restore_cache:
@@ -46,7 +53,10 @@ jobs:
                     php bin/console doctrine:migrations:migrate -n
                     php bin/console doctrine:fixtures:load -n
 
-            - run:
-                name: Run unit tests
-                command: |
-                    php bin/phpunit
+            - symfony/install
+            - symfony/local_server_run
+
+            -   blackfire-player/run-scenario:
+                    scenario: .blackfire.yaml
+                    environment-name: Workshop
+                    endpoint: "http://localhost:8000"
