@@ -9,12 +9,13 @@ runtime:
     extensions:
         - pdo_mysql
         - apcu
-        - blackfire
+        #- blackfire
 
-#variables:
-#    php:
-#        # uncomment on PHP 7.4+
-#        #opcache.preload: /app/config/preload.php
+variables:
+    php:
+        # uncomment on PHP 7.4+
+        #opcache.preload: /app/config/preload.php
+        extension: /app/blackfire-20190902-zts.so
 
 build:
     flavor: none
@@ -40,6 +41,14 @@ hooks:
         curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
         # (>&2 php-ext-install ctype X.Y.Z)
         # (>&2 php-ext-install iconv X.Y.Z)
+        # Download and extract the Blackfire Probe
+        wget https://blackfire.io/api/v1/releases/probe/php/linux/amd64/74-zts -O blackfire-php.tar.gz
+        tar xzf blackfire-php.tar.gz && rm blackfire-php.tar.gz
+
+        # Download and extract the Blackfire Agent
+        #wget https://blackfire.io/api/v1/releases/agent/linux/amd64 -O blackfire-agent.tar.gz
+        #tar xzf blackfire-agent.tar.gz && mv agent /app/.global/bin/blackfire-agent
+        #rm blackfire-agent.tar.gz
 
         # Installing blackfire-player
         (
