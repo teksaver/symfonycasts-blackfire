@@ -9,7 +9,7 @@ runtime:
     extensions:
         - pdo_mysql
         - apcu
-        #- blackfire
+        - blackfire
 
 variables:
     php:
@@ -42,8 +42,8 @@ hooks:
         # (>&2 php-ext-install ctype X.Y.Z)
         # (>&2 php-ext-install iconv X.Y.Z)
         # Download and extract the Blackfire Probe
-        wget https://blackfire.io/api/v1/releases/probe/php/linux/amd64/74-zts -O blackfire-php.tar.gz
-        tar xzf blackfire-php.tar.gz && rm blackfire-php.tar.gz
+        #wget https://blackfire.io/api/v1/releases/probe/php/linux/amd64/74-zts -O blackfire-php.tar.gz
+        #tar xzf blackfire-php.tar.gz && rm blackfire-php.tar.gz
 
         # Download and extract the Blackfire Agent
         #wget https://blackfire.io/api/v1/releases/agent/linux/amd64 -O blackfire-agent.tar.gz
