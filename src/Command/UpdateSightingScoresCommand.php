@@ -49,5 +49,7 @@ class UpdateSightingScoresCommand extends Command
             $this->entityManager->flush();
         }
         $io->progressFinish();
+
+        return static::SUCCESS;
     }
 }
