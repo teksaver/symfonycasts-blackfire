@@ -9,13 +9,7 @@ runtime:
     extensions:
         - pdo_mysql
         - apcu
-        - blackfire
-
-variables:
-    php:
-        # uncomment on PHP 7.4+
-        #opcache.preload: /app/config/preload.php
-        extension: /app/blackfire-20190902-zts.so
+        #- blackfire
 
 build:
     flavor: none
@@ -29,7 +23,9 @@ web:
             expires: 1h
             passthru: "/index.php"
 
-
+variables:
+    php:
+        extension: /app/.global/lib/blackfire-20200930-zts.so
 
 mounts:
     "/var": { source: local, source_path: var }
@@ -41,9 +37,13 @@ hooks:
         curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
         # (>&2 php-ext-install ctype X.Y.Z)
         # (>&2 php-ext-install iconv X.Y.Z)
+
         # Download and extract the Blackfire Probe
-        #wget https://blackfire.io/api/v1/releases/probe/php/linux/amd64/74-zts -O blackfire-php.tar.gz
-        #tar xzf blackfire-php.tar.gz && rm blackfire-php.tar.gz
+        (
+            mkdir -p /app/.global/lib
+            (cd "${SYMFONY_CACHE_DIR:-/tmp}" && wget -nv -N "https://blackfire.io/api/v1/releases/probe/php/linux/amd64/80-zts")
+            tar -xzf "${SYMFONY_CACHE_DIR:-/tmp}/80-zts" -C /app/.global/lib
+        )
 
         # Download and extract the Blackfire Agent
         #wget https://blackfire.io/api/v1/releases/agent/linux/amd64 -O blackfire-agent.tar.gz
