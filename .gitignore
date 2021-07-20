@@ -23,3 +23,6 @@ yarn-error.log
 ###< symfony/phpunit-bridge ###
 
 .idea
+
+# Main Lando file (should be copied from .lando.symfony.yml or .lando.platformsh.yml)
+.lando.yml
