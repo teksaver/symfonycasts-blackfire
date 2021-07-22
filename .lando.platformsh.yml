@@ -13,6 +13,7 @@ config:
         env:
           APP_ENV: dev
           APP_DEBUG: 1
+          BLACKFIRE_AGENT_SOCKET: "tcp://blackfire:8307"
 
 services:
   blackfire:
