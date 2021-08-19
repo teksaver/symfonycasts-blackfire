@@ -8,33 +8,29 @@ name: app
 type: php:8.0
 
 build:
-    flavor: composer
-
-dependencies:
-    php:
-        composer/composer: '^2'
+    flavor: none
 
 runtime:
     extensions:
+        - apcu
         - blackfire
 
 variables:
     env:
-        # Tell Symfony to always install in production-mode.
-        APP_ENV: 'prod'
-        APP_DEBUG: 0
+        # ensure that assets won't be built as they are already committed.
+        NO_YARN: 1
 
 # The hooks that will be performed when the package is deployed.
 hooks:
     build: |
-        set -e
-        bin/console assets:install --no-debug
-        bin/console cache:clear
+        set -x -e
+
+        curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
+        (>&2 COMPOSER_FLAGS="--ignore-platform-reqs" symfony-build)
     deploy: |
-        set -e
-        bin/console assets:install --symlink --relative public
-        bin/console cache:clear
-        bin/console doctrine:migrations:migrate -n
+        set -x -e
+
+        (>&2 symfony-deploy)
 
 # The relationships of the application with services or other applications.
 # The left-hand side is the name of the relationship as it will be exposed
@@ -48,15 +44,9 @@ disk: 2048
 
 # The mounts that will be performed when the package is deployed.
 mounts:
-    "/var/cache":
+    "/var":
         source: local
-        source_path: "cache"
-    "/var/log":
-        source: local
-        source_path: "log"
-    "/var/sessions":
-        source: local
-        source_path: "sessions"
+        source_path: "var"
 
 # The configuration of app when it is exposed to the web.
 web:
@@ -66,4 +56,4 @@ web:
             root: "public"
             # The front-controller script to send non-static requests to.
             passthru: "/index.php"
-
+            expires: 1h
