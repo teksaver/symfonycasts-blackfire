@@ -11,7 +11,7 @@ class ApmCommand implements EventSubscriberInterface
     private $enabled;
     public function __construct()
     {
-        $this->enabled = class_exists(\BlackfireProbe::class, false);
+        $this->enabled = method_exists(\BlackfireProbe::class, 'startTransaction');
     }
 
     public function onConsoleCommand(ConsoleCommandEvent $event)
