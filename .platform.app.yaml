@@ -57,3 +57,8 @@ web:
             # The front-controller script to send non-static requests to.
             passthru: "/index.php"
             expires: 1h
+
+crons:
+    update-sighting:
+        spec: '*/5 * * * *'
+        cmd: './bin/console app:update-sighting-scores'
