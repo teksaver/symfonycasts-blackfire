@@ -4,6 +4,8 @@ namespace App\Twig;
 
 use App\Entity\User;
 use App\Service\CommentHelper;
+use Psr\Cache\CacheItemInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -12,7 +14,7 @@ class AppExtension extends AbstractExtension
 {
     private $commentHelper;
 
-    public function __construct(CommentHelper $commentHelper)
+    public function __construct(CommentHelper $commentHelper, private CacheInterface $cache)
     {
         $this->commentHelper = $commentHelper;
     }
@@ -26,6 +28,16 @@ class AppExtension extends AbstractExtension
 
     public function getUserActivityText(User $user): string
     {
+        $key = sprintf('user_activity-Text_%s', $user->getId());
+
+        return $this->cache->get($key, function(CacheItemInterface $item) use ($user){
+            $item->expiresAfter(time:3600);
+            return $this->computeUserActivityText($user);
+        });
+      
+    }
+
+    private function computeUserActivityText(User $user) : string{
         $commentCount = $this->commentHelper->countRecentCommentsForUser($user);
 
         if ($commentCount > 50) {
