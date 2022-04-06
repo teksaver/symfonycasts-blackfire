@@ -49,7 +49,8 @@ class AgreeToTermsSubscriber implements EventSubscriberInterface
             return;
         }
 
-
+        if (\method_exists(\BlackfireProbe::class, 'addMarker'))
+            \BlackfireProbe::addMarker('AgreeToTerms form');
         $form = $this->formFactory->create(AgreeToUpdatedTermsFormType::class);
 
         $html = $this->twig->render('main/agreeUpdatedTerms.html.twig', [
